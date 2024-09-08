@@ -25,18 +25,28 @@ class Hero:
 class Game:
     def __init__(self, player_name):
         fake = Faker()  # Создаём экземпляр Faker для генерации имени
-        computer_name = fake.first_name() + "(Comp)"  # Генерация случайного имени для компьютера
+        computer_name = fake.first_name()  # Генерация случайного имени для компьютера
         self.player = Hero(player_name)
         self.computer = Hero(computer_name)
 
     def start(self):
         print("Игра началась!")
         while self.player.is_alive() and self.computer.is_alive():
-            # Ход игрока
-            self.player.attack(self.computer)
-            if not self.computer.is_alive():
-                print(f"{self.computer.name} повержен. {self.player.name} победил!")
+            # Запрос на продолжение боя или сдачу
+            choice = input(
+                f"{self.player.name}, хотите продолжить бой или сдаться? (введите 'бой' или 'сдаться'): ").strip().lower()
+            if choice == 'сдаться':
+                print(f"{self.player.name} сдался! {self.computer.name} победил!")
                 break
+            elif choice == 'бой':
+                # Ход игрока
+                self.player.attack(self.computer)
+                if not self.computer.is_alive():
+                    print(f"{self.computer.name} повержен. {self.player.name} победил!")
+                    break
+            else:
+                print("Некорректный ввод, попробуйте снова.")
+                continue
 
             # Ход компьютера
             self.computer.attack(self.player)
